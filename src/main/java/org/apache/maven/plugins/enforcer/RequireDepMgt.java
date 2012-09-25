@@ -36,7 +36,8 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
         try {
             MavenProject project = (MavenProject) helper.evaluate("${project}");
             DependencyManagement depMgt = project.getDependencyManagement();
-            Map<String, Dependency> depMgtMap = getDependencyMap(depMgt.getDependencies());
+            Map<String, Dependency> depMgtMap =
+                    depMgt == null ? new HashMap<String, Dependency>() : getDependencyMap(depMgt.getDependencies());
 
             StringBuilder sb = new StringBuilder();
             List<Dependency> dependencies = project.getDependencies();
