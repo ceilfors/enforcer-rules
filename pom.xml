@@ -7,19 +7,33 @@
     <version>1.0</version>
 
     <name>enforcer-rules</name>
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <url>http://github.com/ceilfors/enforcer-rules</url>
-    <description>Custom rule for Maven Enforcer.</description>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <api.version>1.1.1</api.version>
-        <maven.version>2.0.9</maven.version>
-    </properties>
+    <description>Additional custom rules for Maven Enforcer</description>
+
+    <scm>
+        <connection>https://github.com/ceilfors/enforcer-rules.git</connection>
+        <url>https://github.com/ceilfors/enforcer-rules</url>
+    </scm>
+
     <developers>
         <developer>
             <id>ceilfors</id>
             <name>Wisen Tanasa</name>
         </developer>
     </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <api.version>1.1.1</api.version>
+        <maven.version>2.0.9</maven.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven.enforcer</groupId>
