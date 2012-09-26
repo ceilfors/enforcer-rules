@@ -15,7 +15,7 @@ Supported parameters:
 Sample plugin configuration:
 ```
 <project>
-  \[...\]
+  [...]
   <build>
     <plugins>
       <plugin>
@@ -55,6 +55,6 @@ Sample plugin configuration:
       </plugin>
     </plugins>
   </build>
-  \[...\]
+  [...]
 </project>
 ```
