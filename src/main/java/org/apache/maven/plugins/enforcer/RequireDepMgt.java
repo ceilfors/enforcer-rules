@@ -11,6 +11,7 @@ import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluatio
 import java.util.*;
 
 /**
+ * This rule verifies if dependency management is used.
  * @author ceilfors
  */
 public class RequireDepMgt extends AbstractStandardEnforcerRule {
