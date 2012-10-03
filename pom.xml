@@ -1,7 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <groupId>com.ceilfors.maven.plugin</groupId>
     <artifactId>enforcer-rules</artifactId>
     <version>1.0</version>
@@ -17,7 +21,8 @@
     <description>Additional custom rules for Maven Enforcer</description>
 
     <scm>
-        <connection>https://github.com/ceilfors/enforcer-rules.git</connection>
+        <connection>scm:git:git@github.com:ceilfors/enforcer-rules.git</connection>
+        <developerConnection>scm:git:git@github.com:ceilfors/enforcer-rules.git</developerConnection>
         <url>https://github.com/ceilfors/enforcer-rules</url>
     </scm>
 
@@ -76,15 +81,17 @@
             <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <compilerVersion>1.5</compilerVersion>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-maven-plugin</artifactId>
