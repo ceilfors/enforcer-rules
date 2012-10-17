@@ -47,7 +47,7 @@ Sample plugin configuration:
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.ceilfors.maven.plugin</groupId>
+            <groupId>com.github.ceilfors.maven.plugin</groupId>
             <artifactId>enforcer-rules</artifactId>
             <version>1.0</version>
           </dependency>
