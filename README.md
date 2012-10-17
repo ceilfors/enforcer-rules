@@ -8,7 +8,7 @@ The extra rule that are currently available:
 
 ### RequireDepMgt ###
 Supported parameters:
-* checkVersion - if true, this rule will fail if the version managed by dependencyManagement is being overridden. Default is **false**
+* checkVersion - if true, this rule will fail if the version managed by dependencyManagement is being overridden. Overridding a dependency version with the same version declared in the dependency management won't fail the rule. Default is **false**.
 * ignoreArtifacts - a list of artifacts to be ignored. Format of the artifact is [groupId]:[artifactId]:[packaging]
 * ignoreScopes - a list of scopes to be ignored. Default is ignoring **test** scope
 
