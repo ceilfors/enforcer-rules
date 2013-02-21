@@ -38,6 +38,7 @@ import java.util.*;
  *
  * @author ceilfors
  */
+@SuppressWarnings("UnusedDeclaration") // Plugin
 public class RequireDepMgt extends AbstractStandardEnforcerRule {
 
     /**
