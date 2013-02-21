@@ -3,15 +3,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ceilfors.maven.plugin.it</groupId>
-    <artifactId>dep-not-managed</artifactId>
+    <artifactId>dep-mgt-exist</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Dep not managed</name>
+    <name>Dependency management exist</name>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>1.4</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.4</version>
         </dependency>
     </dependencies>
 
@@ -23,14 +32,14 @@
                 <version>1.0</version>
                 <dependencies>
                     <dependency>
-                        <groupId>@project.groupId@</groupId>
-                        <artifactId>@project.artifactId@</artifactId>
-                        <version>@project.version@</version>
+                        <!--suppress MavenModelInspection --><groupId>@project.groupId@</groupId>
+                        <!--suppress MavenModelInspection --><artifactId>@project.artifactId@</artifactId>
+                        <!--suppress MavenModelInspection --><version>@project.version@</version>
                     </dependency>
                 </dependencies>
                 <configuration>
                     <rules>
-                        <requireDepMgt />
+                        <requireDepMgt/>
                     </rules>
                 </configuration>
             </plugin>
