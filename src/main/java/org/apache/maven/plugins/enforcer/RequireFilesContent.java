@@ -99,15 +99,15 @@ public class RequireFilesContent extends AbstractStandardEnforcerRule {
         }
 
         if (file.isFile()) {
+            BufferedReader reader = null;
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
+                reader = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.contains(content)) {
                         return Result.success();
                     }
                 }
-                reader.close();
 
                 return Result.fail(String.format("Doesn't contain: \"%s\"", content));
             } catch (FileNotFoundException e) {
@@ -115,6 +115,14 @@ public class RequireFilesContent extends AbstractStandardEnforcerRule {
             } catch (IOException e) {
                 helper.getLog().error(e);
                 return Result.fail("IOException was thrown, please check the log.");
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        helper.getLog().error(e);
+                    }
+                }
             }
         } else {
             return Result.fail("Not a file");
