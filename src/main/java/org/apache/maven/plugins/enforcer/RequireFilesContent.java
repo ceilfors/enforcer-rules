@@ -26,66 +26,141 @@ package org.apache.maven.plugins.enforcer;
 import org.apache.maven.enforcer.rule.api.EnforcerRule;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
-import org.apache.maven.plugin.logging.Log;
 
 import java.io.*;
 
 /**
- * This rule verifies if the files listed contains the specified content.
+ * This rule verifies if the files listed contains the specified content. It doesn't extends
+ * <tt>AbstractRequireFiles</tt> because it doesn't handle multiple file's error messages as intended.
  *
  * @author ceilfors
  */
 @SuppressWarnings("UnusedDeclaration") // Plugin
-public class RequireFilesContent extends AbstractRequireFiles {
+public class RequireFilesContent extends AbstractStandardEnforcerRule {
 
-    String content;
+    /**
+     * The content that must be inside the files.
+     */
+    public String content;
 
-    private String errorMsg;
+    /**
+     * Files to be checked.
+     */
+    public File[] files;
 
-    private Log log;
+    /**
+     * If null file handles should be allowed. If they are allowed, it means treat it as a success.
+     */
+    public boolean allowNulls = false; // Adopted from other RequireFiles implementation
 
     @Override
     public void execute(EnforcerRuleHelper helper) throws EnforcerRuleException {
-        if (content == null) {
-            throw new EnforcerRuleException("content is mandatory");
-        }
-        this.log = helper.getLog();
-        super.execute(helper);
-    }
+        checkNotNull(files, "file is mandatory");
+        checkNotNull(content, "content is mandatory");
+        checkArgument(files.length > 0, "at least 1 file must be specified");
 
-    @Override
-    boolean checkFile(File file) {
-        if (file == null) {
-            return true; // if we get here and it's null, treat it as a success; follow other implementation
-        }
+        String newLine = System.getProperty("line.separator");
+        StringBuilder sb = new StringBuilder();
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while((line = reader.readLine()) != null) {
-                if (line.contains(content)) {
-                    return true;
-                }
+        for (File file : files) {
+            Result result = checkFile(helper, file);
+            if (!result.successful) {
+                sb.append(file.getAbsolutePath()).append(" : ").append(result.errorMessage);
+                sb.append(newLine);
             }
-            reader.close();
-
-        } catch (FileNotFoundException e) {
-            this.errorMsg = file + " does not exist!";
-            return false;
-        } catch (IOException e) {
-            this.log.error(e);
-            this.errorMsg = file + " throws IOException!";
-            return false;
         }
 
-        this.errorMsg = file + " doesn't contain: " + content;
-        return false;
+        if (sb.length() != 0) {
+            throw new EnforcerRuleException(sb.toString() +
+                    (message != null ? message :
+                            "Some files produce errors, please check the error message for the individual file above."));
+        }
     }
 
+    protected static void checkNotNull(final Object reference, String errorMessage) {
+        if (reference == null) {
+            throw new NullPointerException(errorMessage);
+        }
+    }
 
-    @Override
-    String getErrorMsg() {
-        return this.errorMsg;
+    protected static void checkArgument(final boolean condition, String errorMessage) throws EnforcerRuleException {
+        if (!condition) {
+            throw new EnforcerRuleException(errorMessage);
+        }
+    }
+
+    protected Result checkFile(EnforcerRuleHelper helper, File file) {
+        if (file == null) {
+            if (allowNulls) {
+                return Result.success();
+            } else {
+                return Result.fail("Empty file name was given and allowNulls is set to false");
+            }
+        }
+
+        if (file.isFile()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains(content)) {
+                        return Result.success();
+                    }
+                }
+                reader.close();
+
+                return Result.fail(String.format("Doesn't contain: \"%s\"", content));
+            } catch (FileNotFoundException e) {
+                return Result.fail("File doesn't exist");
+            } catch (IOException e) {
+                helper.getLog().error(e);
+                return Result.fail("IOException was thrown, please check the log.");
+            }
+        } else {
+            return Result.fail("Not a file");
+        }
+    }
+
+    /**
+     * The checkFile() result object.
+     */
+    protected static class Result {
+
+        /**
+         * True if the check result is successful; otherwise false.
+         */
+        public boolean successful;
+        /**
+         * The error message if the result is NOT successful; otherwise empty string.
+         */
+        public String errorMessage = "";
+
+        /**
+         * Creates successful result object.
+         *
+         * @return the newly created result object
+         */
+        public static Result success() {
+            return new Result(true, "");
+        }
+
+        /**
+         * Creates successful result object.
+         *
+         * @return the newly created result object
+         */
+        public static Result fail(String errorMessage) {
+            return new Result(false, errorMessage);
+        }
+
+        /**
+         * @param successful   true if the check result is successful; otherwise false
+         * @param errorMessage the error message if the result is NOT successful; otherwise empty string
+         */
+        private Result(final boolean successful, final String errorMessage) {
+            this.successful = successful;
+            this.errorMessage = errorMessage;
+        }
     }
 
     @Override
@@ -96,5 +171,10 @@ public class RequireFilesContent extends AbstractRequireFiles {
     @Override
     public boolean isResultValid(EnforcerRule cachedRule) {
         return false;
+    }
+
+    @Override
+    public String getCacheId() {
+        return "0";
     }
 }
