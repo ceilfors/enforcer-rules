@@ -143,6 +143,17 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>MatchGroupIdAndPackage</id>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}/src/it/MatchGroupIdAndPackage</projectsDirectory>
+                            <cloneProjectsTo>${project.build.directory}/it/MatchGroupIdAndPackage</cloneProjectsTo>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>RequireDepMgt</id>
                         <goals>
                             <goal>install</goal>
