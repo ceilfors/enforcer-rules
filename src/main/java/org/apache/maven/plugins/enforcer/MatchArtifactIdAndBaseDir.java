@@ -32,8 +32,10 @@ import org.apache.maven.project.MavenProject;
 import static com.ceilfors.enforcer.rules.EnforcerRuleUtils.getMavenProject;
 
 /**
+ * This rule verifies that a pom's artifact id is the same with it's base directory name.
  * @author ceilfors
  */
+@SuppressWarnings("UnusedDeclaration") // Plugin
 public class MatchArtifactIdAndBaseDir extends AbstractStandardEnforcerRule {
 
     @Override
