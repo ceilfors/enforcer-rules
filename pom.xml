@@ -45,6 +45,11 @@
             <version>14.0.1</version>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven.enforcer</groupId>
             <artifactId>enforcer-api</artifactId>
             <version>${api.version}</version>
@@ -165,6 +170,17 @@
                         <configuration>
                             <projectsDirectory>${basedir}/src/it/RequireFilesContent</projectsDirectory>
                             <cloneProjectsTo>${project.build.directory}/it/RequireFilesContent</cloneProjectsTo>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>MatchArtifactIdAndBaseDir</id>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}/src/it/MatchArtifactIdAndBaseDir</projectsDirectory>
+                            <cloneProjectsTo>${project.build.directory}/it/MatchArtifactIdAndBaseDir</cloneProjectsTo>
                         </configuration>
                     </execution>
                 </executions>
