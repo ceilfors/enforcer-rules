@@ -29,9 +29,12 @@ import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 
 import java.util.*;
+
+import static com.ceilfors.enforcer.rules.EnforcerRuleUtils.getMavenProject;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * This rule verifies if dependency management is used.
@@ -48,53 +51,48 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
     /**
      * The list of artifact to be ignored in <tt>groupId:artifactId:type</tt> format.
      */
-    public List<String> ignoreArtifacts = new ArrayList<String>();
+    public List<String> ignoreArtifacts = newArrayList();
     /**
      * Specify the scope to be ignored. By default ignoring test scope.
      */
-    public List<String> ignoreScopes = Arrays.asList("test");
+    public List<String> ignoreScopes = newArrayList("test");
 
     @Override
     @SuppressWarnings("unchecked")
     public void execute(final EnforcerRuleHelper helper) throws EnforcerRuleException {
         final String newLine = System.getProperty("line.separator");
 
-        try {
-            MavenProject project = (MavenProject) helper.evaluate("${project}");
-            DependencyManagement depMgt = project.getDependencyManagement();
-            Map<String, Dependency> depMgtMap =
-                    depMgt == null ? new HashMap<String, Dependency>() : getDependencyMap(depMgt.getDependencies());
+        MavenProject project = getMavenProject(helper);
+        DependencyManagement depMgt = project.getDependencyManagement();
+        Map<String, Dependency> depMgtMap =
+                depMgt == null ? new HashMap<String, Dependency>() : getDependencyMap(depMgt.getDependencies());
 
-            StringBuilder sb = new StringBuilder();
-            List<Dependency> dependencies = project.getDependencies();
-            for (Dependency dependency : dependencies) {
-                if (ignoreScopes.contains(dependency.getScope())
-                        || ignoreArtifacts.contains(dependency.getManagementKey())) {
-                    continue;
-                }
+        StringBuilder sb = new StringBuilder();
+        List<Dependency> dependencies = project.getDependencies();
+        for (Dependency dependency : dependencies) {
+            if (ignoreScopes.contains(dependency.getScope())
+                    || ignoreArtifacts.contains(dependency.getManagementKey())) {
+                continue;
+            }
 
-                Dependency depMgtDependency = depMgtMap.get(dependency.getManagementKey());
-                if (depMgtDependency == null) {
-                    sb.append(String.format("%s is not managed by dependency management",
-                            dependency.getManagementKey()));
+            Dependency depMgtDependency = depMgtMap.get(dependency.getManagementKey());
+            if (depMgtDependency == null) {
+                sb.append(String.format("%s is not managed by dependency management",
+                        dependency.getManagementKey()));
+                sb.append(newLine);
+            } else {
+                if (checkVersion && depMgtDependency.getVersion() != null &&
+                        !depMgtDependency.getVersion().equals(dependency.getVersion())) {
+                    sb.append(String.format("%s version is with %s. Managed version is %s",
+                            dependency.getManagementKey(), dependency.getVersion(), depMgtDependency.getVersion()));
                     sb.append(newLine);
-                } else {
-                    if (checkVersion && depMgtDependency.getVersion() != null &&
-                            !depMgtDependency.getVersion().equals(dependency.getVersion())) {
-                        sb.append(String.format("%s version is with %s. Managed version is %s",
-                                dependency.getManagementKey(), dependency.getVersion(), depMgtDependency.getVersion()));
-                        sb.append(newLine);
-                    }
                 }
             }
+        }
 
-            if (sb.length() != 0) {
-                throw new EnforcerRuleException(sb.toString() +
-                        (message == null ? "Please update the dependency management." : message));
-            }
-
-        } catch (ExpressionEvaluationException e) {
-            throw new EnforcerRuleException("Unable to lookup an expression " + e.getLocalizedMessage(), e);
+        if (sb.length() != 0) {
+            throw new EnforcerRuleException(sb.toString() +
+                    (message == null ? "Please update the dependency management." : message));
         }
     }
 
@@ -105,7 +103,7 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
      * @return dependency map with the dependency's <tt>management key</tt> as its key
      */
     private Map<String, Dependency> getDependencyMap(final List<Dependency> dependencies) {
-        Map<String, Dependency> dependencyMap = new HashMap<String, Dependency>();
+        Map<String, Dependency> dependencyMap = newHashMap();
         for (Dependency dependency : dependencies) {
             dependencyMap.put(dependency.getManagementKey(), dependency);
         }
