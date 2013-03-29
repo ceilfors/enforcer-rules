@@ -27,9 +27,10 @@ import org.apache.maven.enforcer.rule.api.EnforcerRule;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleHelper;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 
 import java.io.File;
+
+import static com.ceilfors.enforcer.rules.EnforcerRuleUtils.getMavenProject;
 
 /**
  * Rule that fails a build if module does not contain a Java package (i.e. directory) that matches the module's groupId.
@@ -38,25 +39,19 @@ public class MatchGroupIdAndPackage extends AbstractStandardEnforcerRule {
 
     @Override
     public void execute(EnforcerRuleHelper enforcerRuleHelper) throws EnforcerRuleException {
-        try {
-            MavenProject project = (MavenProject) enforcerRuleHelper.evaluate("${project}");
-            String groupId = project.getGroupId();
+        MavenProject project = getMavenProject(enforcerRuleHelper);
+        String groupId = project.getGroupId();
 
-            for (Object src : project.getCompileSourceRoots()) {
-                File dir = new File(src + File.separator + groupId.replace('.', File.separatorChar));
-                if (dir.exists()) {
-                    // PASSED
-                    return;
-                }
+        for (Object src : project.getCompileSourceRoots()) {
+            File dir = new File(src + File.separator + groupId.replace('.', File.separatorChar));
+            if (dir.exists()) {
+                // PASSED
+                return;
             }
-
-            // FAILED
-            throw new EnforcerRuleException("No matching Java package for groupId [" + groupId + "]");
-
-        } catch (ExpressionEvaluationException e) {
-            throw new EnforcerRuleException("Unable to lookup an expression " + e.getLocalizedMessage(), e);
         }
 
+        // FAILED
+        throw new EnforcerRuleException("No matching Java package for groupId [" + groupId + "]");
     }
 
     @Override
@@ -68,7 +63,6 @@ public class MatchGroupIdAndPackage extends AbstractStandardEnforcerRule {
     public boolean isResultValid(EnforcerRule enforcerRule) {
         return false;
     }
-
 
     @Override
     public String getCacheId() {
