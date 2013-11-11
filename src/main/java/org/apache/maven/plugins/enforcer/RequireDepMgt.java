@@ -56,6 +56,12 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
      * Specify the scope to be ignored. By default ignoring test scope.
      */
     public List<String> ignoreScopes = newArrayList("test");
+    
+    /**
+     * Ignore dependencies not managed by parent.
+     */
+    public boolean ignoreNonManaged; 
+    
 
     @Override
     @SuppressWarnings("unchecked")
@@ -76,7 +82,7 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
             }
 
             Dependency depMgtDependency = depMgtMap.get(dependency.getManagementKey());
-            if (depMgtDependency == null) {
+            if (depMgtDependency == null && ignoreNonManaged == false) {
                 sb.append(String.format("%s is not managed by dependency management",
                         dependency.getManagementKey()));
                 sb.append(newLine);
