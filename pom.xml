@@ -147,7 +147,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.8</version>
                 <configuration>
                     <showErrors>true</showErrors>
                     <streamLogs>false</streamLogs>
@@ -159,47 +159,15 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>MatchGroupIdAndPackage</id>
                         <goals>
                             <goal>install</goal>
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <projectsDirectory>${basedir}/src/it/MatchGroupIdAndPackage</projectsDirectory>
-                            <cloneProjectsTo>${project.build.directory}/it/MatchGroupIdAndPackage</cloneProjectsTo>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>RequireDepMgt</id>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${basedir}/src/it/RequireDepMgt</projectsDirectory>
-                            <cloneProjectsTo>${project.build.directory}/it/RequireDepMgt</cloneProjectsTo>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>RequireFilesContent</id>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${basedir}/src/it/RequireFilesContent</projectsDirectory>
-                            <cloneProjectsTo>${project.build.directory}/it/RequireFilesContent</cloneProjectsTo>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>MatchArtifactIdAndBaseDir</id>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${basedir}/src/it/MatchArtifactIdAndBaseDir</projectsDirectory>
-                            <cloneProjectsTo>${project.build.directory}/it/MatchArtifactIdAndBaseDir</cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>**/pom.xml</pomInclude><!-- Include sub directories -->
+                            </pomIncludes>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                         </configuration>
                     </execution>
                 </executions>
