@@ -16,7 +16,7 @@ For more sample usages, refer to integration test scenarios in src/it folder.
 [matchGroupIdAndPackage]: https://github.com/ceilfors/enforcer-rules/wiki/matchGroupIdAndPackage
 [matchArtifactIdAndBaseDir]: https://github.com/ceilfors/enforcer-rules/wiki/matchArtifactIdAndBaseDir
 
-## Release
+### Releasing artifacts
 1. Deploy to bintray
 2. Sign files using bintray REST API e.g. https://api.bintray.com/gpg/ceilfors/maven/enforcer-rules/versions/1.2.0
 3. Request for sync in jcenter
