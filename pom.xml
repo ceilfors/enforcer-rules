@@ -105,6 +105,8 @@
                 <version>2.5.1</version>
                 <configuration>
                     <compilerVersion>1.5</compilerVersion>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
             <plugin>
