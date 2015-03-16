@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ceilfors.maven.plugin</groupId>
     <artifactId>enforcer-rules</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
 
     <name>enforcer-rules</name>
     <licenses>
@@ -18,7 +18,7 @@
         <connection>scm:git:git@github.com:ceilfors/enforcer-rules.git</connection>
         <developerConnection>scm:git:git@github.com:ceilfors/enforcer-rules.git</developerConnection>
         <url>https://github.com/ceilfors/enforcer-rules</url>
-      <tag>enforcer-rules-1.2.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
