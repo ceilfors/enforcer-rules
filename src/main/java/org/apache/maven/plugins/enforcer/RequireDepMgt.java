@@ -98,7 +98,7 @@ public class RequireDepMgt extends AbstractStandardEnforcerRule {
 
         if (sb.length() != 0) {
             throw new EnforcerRuleException(sb.toString() +
-                    (message == null ? "Please update the dependency management." : message));
+                    (getMessage() == null ? "Please update the dependency management." : getMessage()));
         }
     }
 

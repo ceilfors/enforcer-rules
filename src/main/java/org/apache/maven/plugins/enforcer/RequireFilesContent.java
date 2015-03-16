@@ -72,7 +72,7 @@ public class RequireFilesContent extends AbstractStandardEnforcerRule {
 
         if (sb.length() != 0) {
             throw new EnforcerRuleException(sb.toString() +
-                    (message != null ? message :
+                    (getMessage() != null ? getMessage() :
                             "Some files produce errors, please check the error message for the individual file above."));
         }
     }
